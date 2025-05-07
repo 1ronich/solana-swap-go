@@ -215,13 +215,13 @@ func (st *SolanaTracker) PerformSwap(swapResponse *SwapResponse, options SwapOpt
 	}
 
 	// Get the recent blockhash
-	recentBlockhash, err := client.GetRecentBlockhash(ctx, rpc.CommitmentFinalized)
+	resp, err := client.GetLatestBlockhash(ctx, rpc.CommitmentFinalized)
 	if err != nil {
-		return "", fmt.Errorf("error getting recent blockhash: %w", err)
+		return "", fmt.Errorf("error getting latest blockhash: %w", err)
 	}
 
 	// Set the recent blockhash for the transaction
-	tx.Message.RecentBlockhash = recentBlockhash.Value.Blockhash
+	tx.Message.RecentBlockhash = resp.Value.Blockhash
 
 	// Sign the transaction
 	_, err = tx.Sign(func(key solana.PublicKey) *solana.PrivateKey {
